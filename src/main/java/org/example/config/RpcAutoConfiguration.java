@@ -5,6 +5,10 @@ import com.alibaba.nacos.api.exception.NacosException;
 import com.alibaba.nacos.api.naming.NamingService;
 
 import org.example.annotation.RpcAnnotationInject;
+import org.example.common.select.LoadBalancer;
+import org.example.common.select.impl.ConsistentHashLoadBalancer;
+import org.example.common.select.impl.RandomLoadBalancer;
+import org.example.common.select.impl.RoundRobinLoadBalancer;
 import org.example.discovery.Discovery;
 import org.example.discovery.impl.NacosDiscovery;
 import org.example.discovery.impl.RedisDiscovery;
@@ -12,7 +16,7 @@ import org.example.properties.RpcProperties;
 import org.example.register.Impl.NacosRegister;
 import org.example.register.Impl.RedisRegister;
 import org.example.register.Register;
-import org.example.server.RpcServer;
+import org.example.core.server.RpcServer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -106,8 +110,20 @@ public class RpcAutoConfiguration {
         return discovery;
     }
     @Bean
-    public RpcAnnotationInject rpcAnnotationInject(Register register, Discovery discovery){
-        return new RpcAnnotationInject(register,discovery);
+    public LoadBalancer loadBalancer(RpcProperties rpcProperties){
+        if(rpcProperties.getLoadBalancer().equals("random")){
+            return new RandomLoadBalancer();
+        }
+        if(rpcProperties.getLoadBalancer().equals("round")){
+            return new RoundRobinLoadBalancer();
+        }
+        if(rpcProperties.getLoadBalancer().equals("hash")){
+            return new ConsistentHashLoadBalancer();
+        }
+    }
+    @Bean
+    public RpcAnnotationInject rpcAnnotationInject(Register register, Discovery discovery, LoadBalancer loadBalancer){
+        return new RpcAnnotationInject(register,discovery,loadBalancer);
     }
     @Bean
     public RpcServer rpcServer(Register register, RpcProperties rpcProperties, ThreadPoolExecutor threadPoolExecutor){

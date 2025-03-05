@@ -11,12 +11,13 @@ import org.springframework.context.annotation.Configuration;
 public class RpcProperties {
     private String registerType="redis";
 
+    private String loadBalancer="random";
+
     private int port=1200;
 
     private int redisHearBeat=10000;
 
     private int redisExpireTime=20000;
-
 
     private String nacosIp="127.0.0.1";
 

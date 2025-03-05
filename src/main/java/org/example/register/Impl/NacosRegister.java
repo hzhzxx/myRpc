@@ -10,7 +10,7 @@ import org.example.register.Register;
 import java.net.InetAddress;
 import java.util.Properties;
 
-import static org.example.constant.Prefix.REGISTE_RPREFIX;
+import static org.example.common.constant.Prefix.REGISTE_RPREFIX;
 
 
 public class NacosRegister extends CommonRegister implements Register {

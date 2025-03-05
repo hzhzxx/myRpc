@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
-import static org.example.constant.Prefix.REGISTE_RPREFIX;
+import static org.example.common.constant.Prefix.REGISTE_RPREFIX;
 
 
 public class NacosDiscovery implements Discovery {

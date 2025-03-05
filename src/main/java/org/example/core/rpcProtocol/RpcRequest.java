@@ -1,4 +1,4 @@
-package org.example.rpcProtocol;
+package org.example.core.rpcProtocol;
 
 import lombok.Builder;
 import lombok.Data;

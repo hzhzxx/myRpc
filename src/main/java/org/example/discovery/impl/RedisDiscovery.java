@@ -9,7 +9,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.example.constant.Prefix.REGISTE_RPREFIX;
+import static org.example.common.constant.Prefix.REGISTE_RPREFIX;
 
 
 public class RedisDiscovery implements Discovery {

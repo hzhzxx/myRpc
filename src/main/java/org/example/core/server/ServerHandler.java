@@ -1,12 +1,12 @@
-package org.example.server;
+package org.example.core.server;
 
 
 import lombok.Data;
 import org.example.register.Register;
-import org.example.rpcProtocol.RpcRequest;
-import org.example.rpcProtocol.RpcRequestBody;
-import org.example.rpcProtocol.RpcResponse;
-import org.example.util.GsonUtil;
+import org.example.core.rpcProtocol.RpcRequest;
+import org.example.core.rpcProtocol.RpcRequestBody;
+import org.example.core.rpcProtocol.RpcResponse;
+import org.example.common.util.GsonUtil;
 
 
 import java.io.*;

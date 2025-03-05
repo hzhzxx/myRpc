@@ -1,23 +1,25 @@
 package org.example.annotation;
 
 
+import org.example.common.select.LoadBalancer;
 import org.example.discovery.Discovery;
-import org.example.proxy.ProxyFactory;
+import org.example.core.proxy.ProxyFactory;
 import org.example.register.Register;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.util.StringUtils;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
 public class RpcAnnotationInject implements BeanPostProcessor{
     private Register register;
 
     private Discovery discovery;
-    public RpcAnnotationInject(Register register, Discovery discovery){
+    private LoadBalancer loadBalancer;
+    public RpcAnnotationInject(Register register, Discovery discovery, LoadBalancer loadBalancer){
         this.register=register;
         this.discovery=discovery;
+        this.loadBalancer=loadBalancer;
     }
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
@@ -44,11 +46,11 @@ public class RpcAnnotationInject implements BeanPostProcessor{
                 try {
                     if(StringUtils.hasLength(rpcClient.value())){
                         System.out.println("注入服务"+rpcClient.value()+field.getType());
-                        field.set(bean, ProxyFactory.getJDKProxy(field.getType(),rpcClient.value(),discovery));
+                        field.set(bean, ProxyFactory.getJDKProxy(field.getType(),rpcClient.value(),discovery,loadBalancer));
                     }
                     else {
                         System.out.println("注入服务"+field.getClass().getName());
-                        field.set(bean,ProxyFactory.getJDKProxy(field.getType(),discovery));
+                        field.set(bean,ProxyFactory.getJDKProxy(field.getType(),discovery,loadBalancer));
                     }
                 }
                 catch (IllegalAccessException e){

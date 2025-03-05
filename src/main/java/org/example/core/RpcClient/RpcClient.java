@@ -1,9 +1,9 @@
-package org.example.RpcClient;
+package org.example.core.RpcClient;
 
 
-import org.example.rpcProtocol.RpcRequest;
-import org.example.rpcProtocol.RpcResponse;
-import org.example.util.GsonUtil;
+import org.example.core.rpcProtocol.RpcRequest;
+import org.example.core.rpcProtocol.RpcResponse;
+import org.example.common.util.GsonUtil;
 
 import java.io.InputStream;
 import java.io.ObjectInputStream;

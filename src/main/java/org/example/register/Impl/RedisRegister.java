@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 
-import static org.example.constant.Prefix.REGISTE_RPREFIX;
+import static org.example.common.constant.Prefix.REGISTE_RPREFIX;
 
 
 public class RedisRegister extends CommonRegister implements Register {
