@@ -26,6 +26,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.StringUtils;
 
 import java.util.Properties;
+import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -120,6 +121,7 @@ public class RpcAutoConfiguration {
         if(rpcProperties.getLoadBalancer().equals("hash")){
             return new ConsistentHashLoadBalancer();
         }
+        return new RandomLoadBalancer();
     }
     @Bean
     public RpcAnnotationInject rpcAnnotationInject(Register register, Discovery discovery, LoadBalancer loadBalancer){

@@ -1,6 +1,7 @@
 package org.example.core.proxy;
 
 import org.example.common.select.LoadBalancer;
+import org.example.common.util.RequestIdGenerator;
 import org.example.core.RpcClient.RpcClient;
 import org.example.common.constant.BodyType;
 
@@ -42,6 +43,10 @@ public class JDKProxyInvocationHandler implements InvocationHandler {
 
         Map<String,Object> header=new HashMap<>();
         header.put("body-type", BodyType.BYTEARRAYS);
+        Long requestId=RequestIdGenerator.generateRequestId();
+        header.put("body-requestId", requestId);
+        header.put("version",1);
+        //requestId
         RpcRequest rpcRequest=RpcRequest.builder()
                 .header(header)
                 .build();

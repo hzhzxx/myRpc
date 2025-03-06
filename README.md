@@ -75,13 +75,14 @@ public class ConsumerController {
 
 #### RPC原理
 RPC(Remote procedure call)远程过程调用，简单理解是本地需要某个服务，而具体的服务由另外一个独立的服务端提供，我们可以通过网络等其他方式通知到服务端执行对应的服务，然后返回我们关心的信息。
+![输入图片说明](assets/image.png)
 ##### 服务发现 
 解决这个问题，可以采用第三方，即是专门来管理服务，一旦有服务请求来，就告诉对方所请求的服务的地址有哪些。服务注册及服务发现架构中主要有消费者，注册中心，提供者三方架构角色，消费者通过注册中心去订阅自己关心的服务，注册中心会将注册了的服务地址等相关信息返回给消费者，消费者再通过具体的协议将数据发送到socket中最后由网卡发送到网络上，最后得到服务提供者的响应数据。
 ![输入图片说明](assets/image2.png)
 #### 实现
 ##### 编写RPC协议
 RpcRequest和RpcResponse都是RPC协议，RPC协议包括header和body两部分，header用Map表示，body用序列化后的byte[]流表示，这里的字节流的序列化的方式可以是Java的序列化方式，可以换成JSON序列化方式，在框架中直接使用Java的序列化方式。
-然后body中被序列化的内容，因为是codec层的工作，放在了codec包中，RPCReuqest要调用一个方法，需要知道接口名、方法名、参数、参数类型，因此把这些东西放进RpcRequestBody中即可，后面把它序列化后房价RpcRequest的body字节流中；同理，RPCResponse 的body中，只需要一个被序列化后的Java Object即可。
+然后body中被序列化的内容，RPCReuqest要调用一个方法，需要知道接口名、方法名、参数、参数类型，因此把这些东西放进RpcRequestBody中即可，后面把它序列化后放在RpcRequest的body字节流中；同理，RPCResponse 的body中，只需要一个被序列化后的Java Object即可。
 
 
 ##### 客户端实现（动态代理）
