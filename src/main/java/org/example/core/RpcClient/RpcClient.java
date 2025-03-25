@@ -11,8 +11,8 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-public class RpcClient {
-    public static RpcResponse sendToInvocation(String host, int port, RpcRequest request){
+public class RpcClient implements Client{
+    public  RpcResponse sendToInvocation(String host, int port, RpcRequest request){
         try {
             Socket socket=new Socket(host,port);
 
@@ -24,10 +24,10 @@ public class RpcClient {
             ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
 
 
-            String requestStr=GsonUtil.getGson().toJson(request);
+//            String requestStr=GsonUtil.getGson().toJson(request);
 
 
-            objectOutputStream.writeObject(requestStr);
+            objectOutputStream.writeObject(request);
             objectOutputStream.flush();
 
             String responseStr= (String) objectInputStream.readObject();

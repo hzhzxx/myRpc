@@ -13,7 +13,7 @@ import java.nio.channels.SocketChannel;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 
-public class RpcServer {
+public class RpcServer implements Server{
     private ThreadPoolExecutor threadPoolExecutor;
     private int port;
     private Register register;

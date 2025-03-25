@@ -35,38 +35,38 @@ public class ServerHandler implements Runnable{
             OutputStream outputStream=socket.getOutputStream();
             ObjectOutputStream objectOutputStream=new ObjectOutputStream(outputStream);
 
-            String requestStr= (String) objectInputStream.readObject();
-            System.out.println(requestStr);
-            RpcRequest request= GsonUtil.getGson().fromJson(requestStr, RpcRequest.class);
-            Map<String,Object> header=request.getHeader();
 
-            RpcRequestBody body=request.getRequestBody();
-            System.out.println(header.get("body-type"));
+            RpcRequest request= (RpcRequest) objectInputStream.readObject();;
+
+
+            RpcRequestBody body=request.getBody();
+
             System.out.println("接口名称"+body.getInterfaceName());
             System.out.println("方法名称"+body.getMethodName());
             System.out.println("方法参数"+body.getParameters());
             System.out.println("参数类型"+body.getParamTypes());
 
             RpcResponse response=new RpcResponse();
-            Map<String,Object> responseHeader=new HashMap<>();
+
 
             Object localService=register.getService(body.getInterfaceName());
             if(localService!=null){
                 Method method=localService.getClass().getMethod(body.getMethodName(),body.getParamTypes());
                 Object res=method.invoke(localService,body.getParameters());
-                response.setBody(res);
-                responseHeader.put("code","200");
+
+                response.setBody(GsonUtil.getGson().toJson(res));
+                response.setCode(200);
             }
             else{
                 DefaultBody user=new DefaultBody();
                 user.setCode(-1);
                 user.setName("未找到服务");
 
-                response.setBody(user);
-                responseHeader.put("code","404");
+                response.setBody(GsonUtil.getGson().toJson(user));
+                response.setCode(404);
             }
 
-            response.setHeader(responseHeader);
+
 
 
             String responseStr=GsonUtil.getGson().toJson(response);

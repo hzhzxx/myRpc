@@ -1,5 +1,6 @@
 package org.example.common.util;
 
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -9,9 +10,9 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 
 public class RequestIdGenerator {
-    private static final AtomicLong counter = new AtomicLong(System.currentTimeMillis());
+    private static final AtomicInteger counter = new AtomicInteger();
 
-    public static long generateRequestId() {
+    public static int generateRequestId() {
         return counter.incrementAndGet();
     }
 }

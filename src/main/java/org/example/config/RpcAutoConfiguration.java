@@ -9,6 +9,14 @@ import org.example.common.select.LoadBalancer;
 import org.example.common.select.impl.ConsistentHashLoadBalancer;
 import org.example.common.select.impl.RandomLoadBalancer;
 import org.example.common.select.impl.RoundRobinLoadBalancer;
+import org.example.common.util.GsonSerializer;
+import org.example.common.util.JavaSerializer;
+import org.example.common.util.Serializer;
+import org.example.core.RpcClient.Client;
+import org.example.core.RpcClient.RpcClient;
+import org.example.core.RpcClient.RpcClientNetty;
+import org.example.core.server.RpcServerNetty;
+import org.example.core.server.Server;
 import org.example.discovery.Discovery;
 import org.example.discovery.impl.NacosDiscovery;
 import org.example.discovery.impl.RedisDiscovery;
@@ -52,6 +60,17 @@ public class RpcAutoConfiguration {
                 new ThreadPoolExecutor.AbortPolicy());
          return threadPoolExecutor;
     }
+    @Bean("serializer")
+    public Serializer serializer(RpcProperties rpcProperties){
+        if(rpcProperties.getSerializeType().equals("Json")){
+            System.out.println("Json序列化");
+            return new GsonSerializer();
+        }
+        else{
+            System.out.println("Java序列化");
+            return new JavaSerializer();
+        }
+    }
     @Bean("register")
     @Conditional(OnRedisRegisterTypeCondition.class)
     public Register redisRegister(RedisTemplate redisTemplate, RpcProperties rpcProperties, ThreadPoolExecutor threadPoolExecutor){
@@ -85,9 +104,6 @@ public class RpcAutoConfiguration {
         Register register=new NacosRegister(rpcProperties,namingService);
         return register;
     }
-
-
-
 
 
     @Conditional(OnRedisRegisterTypeCondition.class)
@@ -124,18 +140,33 @@ public class RpcAutoConfiguration {
         return new RandomLoadBalancer();
     }
     @Bean
-    public RpcAnnotationInject rpcAnnotationInject(Register register, Discovery discovery, LoadBalancer loadBalancer){
-        return new RpcAnnotationInject(register,discovery,loadBalancer);
+    public Client client(RpcProperties rpcProperties,Serializer serializer){
+
+        if(rpcProperties.getServerType().equals("netty")){
+            return new RpcClientNetty(serializer);
+        }
+        return new RpcClient();
     }
     @Bean
-    public RpcServer rpcServer(Register register, RpcProperties rpcProperties, ThreadPoolExecutor threadPoolExecutor){
+    public RpcAnnotationInject rpcAnnotationInject(Register register, Discovery discovery, LoadBalancer loadBalancer, Client client){
+        return new RpcAnnotationInject(register,discovery,loadBalancer,client);
+    }
+    @Bean
+    public Server server(Register register, RpcProperties rpcProperties, ThreadPoolExecutor threadPoolExecutor,Serializer serializer){
         if(register instanceof RedisRegister){
             System.out.println("rpc 服务获得redisregister");
         } else if (register instanceof NacosRegister) {
             System.out.println("rpc 服务获得nacosRegister");
         }
-        RpcServer rpcServer=new RpcServer(rpcProperties.getPort(),register,threadPoolExecutor);
-        return rpcServer;
+        Server server;
+        if(rpcProperties.getServerType().equals("netty")){
+            server=new RpcServerNetty(rpcProperties.getPort(),register,threadPoolExecutor,serializer);
+        }
+        else {
+            server=new RpcServer(rpcProperties.getPort(),register,threadPoolExecutor);
+        }
+
+        return server;
     }
 
 

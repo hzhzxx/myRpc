@@ -25,5 +25,9 @@ public class RpcProperties {
 
     private String nacosNameSpace;
 
+    private String serverType="netty";
+
+    private String serializeType="Json";
+
 
 }

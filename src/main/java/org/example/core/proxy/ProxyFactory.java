@@ -2,19 +2,20 @@ package org.example.core.proxy;
 
 import net.sf.cglib.proxy.Enhancer;
 import org.example.common.select.LoadBalancer;
+import org.example.core.RpcClient.Client;
 import org.example.discovery.Discovery;
 
 
 import java.lang.reflect.Proxy;
 
 public class ProxyFactory {
-    public static <T> T getJDKProxy(Class<T> interfaceClass, String remoteServiceName, Discovery discovery, LoadBalancer loadBalancer){
+    public static <T> T getJDKProxy(Class<T> interfaceClass, String remoteServiceName, Discovery discovery, LoadBalancer loadBalancer, Client client){
 
-        return (T)Proxy.newProxyInstance(interfaceClass.getClassLoader(), new Class<?>[]{interfaceClass}, new JDKProxyInvocationHandler(remoteServiceName,discovery,loadBalancer));
+        return (T)Proxy.newProxyInstance(interfaceClass.getClassLoader(), new Class<?>[]{interfaceClass}, new JDKProxyInvocationHandler(remoteServiceName,discovery,loadBalancer, client));
     }
-    public static <T> T getJDKProxy(Class<T> interfaceClass, Discovery discovery, LoadBalancer loadBalancer){
+    public static <T> T getJDKProxy(Class<T> interfaceClass, Discovery discovery, LoadBalancer loadBalancer, Client client){
 
-        return (T)Proxy.newProxyInstance(interfaceClass.getClassLoader(), new Class<?>[]{interfaceClass}, new JDKProxyInvocationHandler(interfaceClass,discovery,loadBalancer));
+        return (T)Proxy.newProxyInstance(interfaceClass.getClassLoader(), new Class<?>[]{interfaceClass}, new JDKProxyInvocationHandler(interfaceClass,discovery,loadBalancer, client));
     }
     public static <T> T getCGLIBProxy(Class<T> interfaceClass,String remoteServiceName, Discovery discovery){
         //1.创建Enhancer

@@ -47,16 +47,17 @@ public class CGLIBProxyInterceptor<T> implements MethodInterceptor {
         Map<String,Object> header=new HashMap<>();
         header.put("body-type", BodyType.BYTEARRAYS);
         RpcRequest rpcRequest=RpcRequest.builder()
-                .header(header)
+
                 .build();
 
-        rpcRequest.setRequestBody(rpcRequestBody);
+        rpcRequest.setBody(rpcRequestBody);
         List<String> list=discovery.getServiceAddress(remoteServiceName);
         String[] address=list.get(random.nextInt(list.size())).split(":");
 
-        RpcResponse rpcResponse= RpcClient.sendToInvocation(address[0],Integer.parseInt(address[1]),rpcRequest);
+//        RpcResponse rpcResponse= RpcClient.sendToInvocation(address[0],Integer.parseInt(address[1]),rpcRequest);
+        RpcResponse rpcResponse=new RpcResponse();
         Object responseBody=rpcResponse.getBody();
-        System.out.println("调用状态"+rpcResponse.getHeader().get("code"));
+
 
         return GsonUtil.fromObject(responseBody,method.getReturnType());
     }

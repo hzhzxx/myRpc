@@ -12,11 +12,11 @@ import java.util.Map;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RpcResponse implements Serializable {
-    // 协议头部分
-    private Map<String,Object> header;
+public class RpcResponse extends Message implements Serializable {
 
+    // 错误类型
+    private Exception exceptionValue=null;
     // 协议体部分
-    private Object body;
+    private String body;
 }
 

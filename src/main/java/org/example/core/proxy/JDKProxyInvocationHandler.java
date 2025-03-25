@@ -2,6 +2,7 @@ package org.example.core.proxy;
 
 import org.example.common.select.LoadBalancer;
 import org.example.common.util.RequestIdGenerator;
+import org.example.core.RpcClient.Client;
 import org.example.core.RpcClient.RpcClient;
 import org.example.common.constant.BodyType;
 
@@ -22,13 +23,15 @@ public class JDKProxyInvocationHandler implements InvocationHandler {
     private String remoteServiceName;
     private Discovery discovery;
     private LoadBalancer loadBalancer;
-    public JDKProxyInvocationHandler(String remoteServiceName, Discovery discovery,LoadBalancer loadBalancer){
+    private Client client;
+    public JDKProxyInvocationHandler(String remoteServiceName, Discovery discovery, LoadBalancer loadBalancer, Client client){
         this.remoteServiceName=remoteServiceName;
         this.discovery=discovery;
         this.loadBalancer=loadBalancer;
+        this.client=client;
     }
-    public JDKProxyInvocationHandler(Class interfaceClass,Discovery discovery,LoadBalancer loadBalancer){
-        this(interfaceClass.getName(),discovery,loadBalancer);
+    public JDKProxyInvocationHandler(Class interfaceClass,Discovery discovery,LoadBalancer loadBalancer, Client client){
+        this(interfaceClass.getName(),discovery,loadBalancer,client);
         System.out.println(interfaceClass.getName());
     }
     @Override
@@ -43,15 +46,16 @@ public class JDKProxyInvocationHandler implements InvocationHandler {
 
         Map<String,Object> header=new HashMap<>();
         header.put("body-type", BodyType.BYTEARRAYS);
-        Long requestId=RequestIdGenerator.generateRequestId();
-        header.put("body-requestId", requestId);
+
         header.put("version",1);
         //requestId
-        RpcRequest rpcRequest=RpcRequest.builder()
-                .header(header)
-                .build();
 
-        rpcRequest.setRequestBody(rpcRequestBody);
+        RpcRequest rpcRequest=RpcRequest.builder()
+
+                .build();
+        int sequenceId = RequestIdGenerator.generateRequestId();
+        rpcRequest.setBody(rpcRequestBody);
+        rpcRequest.setSequenceId(sequenceId);
 
         List<String> list=discovery.getServiceAddress(remoteServiceName);
         if(list==null||list.size()==0){
@@ -59,9 +63,8 @@ public class JDKProxyInvocationHandler implements InvocationHandler {
         }
 
         RpcResponse rpcResponse=send(rpcRequest,list,method,args);
-        System.out.println("调用状态"+rpcResponse.getHeader().get("code"));
         for(int i=0;i<3;i++){
-            if(!rpcResponse.getHeader().get("code").equals("200")){
+            if(rpcResponse.getCode()!=200){
                 rpcResponse=send(rpcRequest,list,method,args);
 
             }
@@ -70,14 +73,14 @@ public class JDKProxyInvocationHandler implements InvocationHandler {
             }
         }
 
-        Object responseBody=rpcResponse.getBody();
-        return GsonUtil.fromObject(responseBody,method.getReturnType());
+        String responseBody=rpcResponse.getBody();
+        return GsonUtil.getGson().fromJson(responseBody,method.getReturnType());
     }
     private RpcResponse send(RpcRequest rpcRequest,List<String> list,Method method, Object[] args){
         String selectedAddress = loadBalancer.select(list, method, args);
         String[] address = selectedAddress.split(":");
-//        String[] address=list.get(random.nextInt(list.size())).split(":");
 
-        return RpcClient.sendToInvocation(address[0],Integer.parseInt(address[1]),rpcRequest);
+
+        return client.sendToInvocation(address[0],Integer.parseInt(address[1]),rpcRequest);
     }
 }
