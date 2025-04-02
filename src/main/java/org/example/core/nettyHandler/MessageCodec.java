@@ -34,10 +34,15 @@ public class MessageCodec extends MessageToMessageCodec<ByteBuf,Message> {
     public void encode(ChannelHandlerContext ctx, Message msg, List<Object> outList) throws Exception {
 
         ByteBuf out = ctx.alloc().buffer();
+        // 4 字节的魔数
         out.writeBytes(new byte[]{1, 2, 3, 4});
+        // 1 字节的版本,
         out.writeByte(1);
+        // 1 字节的序列化方式 jdk 0 , json 1
         out.writeByte(0);
+
         byte[] bytes=null;
+
         try {
             bytes=serializer.serialize(msg);
 
@@ -45,8 +50,9 @@ public class MessageCodec extends MessageToMessageCodec<ByteBuf,Message> {
         catch (Exception e){
             e.printStackTrace();
         }
-
+        // 4 长度
         out.writeInt(bytes.length);
+        // length 写入内容
         out.writeBytes(bytes);
 
         outList.add(out);

@@ -97,13 +97,13 @@ public class RpcClientNetty implements Client{
 
     // 初始化 channel 方法
     private  Bootstrap initChannel() {
-
+        //日志
         LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.DEBUG);
-
+        //编码
         MessageCodec MESSAGE_CODEC = new MessageCodec(serializer);
-
+        //接收数据
         RpcClientMessageHandler RPC_HANDLER = new RpcClientMessageHandler();
-
+        //心跳
         HeartBeatClientHandler HEATBEAT_CLIENT = new HeartBeatClientHandler();
         bootstrap.channel(NioSocketChannel.class)
                 .group(group)
@@ -127,7 +127,6 @@ public class RpcClientNetty implements Client{
     public RpcResponse sendToInvocation(String host, int port, RpcRequest request)  {
         Promise<RpcResponse> promise = new DefaultPromise<>(group.next());
         promises.put(request.getSequenceId(), promise);
-
 
         Channel channel = get(host,port);
 

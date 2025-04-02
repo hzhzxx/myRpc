@@ -19,7 +19,6 @@ public class RpcClientMessageHandler extends SimpleChannelInboundHandler<RpcResp
     protected void channelRead0(ChannelHandlerContext ctx, RpcResponse msg)  {
         try {
             log.debug("{}", msg);
-            // 每次使用完都要移除
 
             Promise<RpcResponse> promise = RpcClientNetty.promises.remove(msg.getSequenceId());
 

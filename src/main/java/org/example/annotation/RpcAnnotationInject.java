@@ -24,6 +24,7 @@ public class RpcAnnotationInject implements BeanPostProcessor{
         this.loadBalancer=loadBalancer;
         this.client=client;
     }
+    //查找自定义注解
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         //查找RpcService注解的bean
