@@ -33,11 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 
-/**
- * 管理Rpc客户端的channel
- *
- * @author chenlei
- */
+
 @Slf4j
 public class RpcClientNetty implements Client{
 
@@ -47,7 +43,7 @@ public class RpcClientNetty implements Client{
 
 
     public   static Map<Integer, Promise<RpcResponse>> promises= new ConcurrentHashMap<Integer, Promise<RpcResponse>>();;
-    //channel集合  可能请求多个服务
+
     private   Map<String, Channel> channels;
     private Serializer serializer;
 
@@ -64,7 +60,7 @@ public class RpcClientNetty implements Client{
 
     public  Channel get(String host,int port) {
         String key = host+":"+port;
-        //判断是否存在
+
         if (channels.containsKey(key)) {
             Channel channel = channels.get(key);
             if (channels != null && channel.isActive()) {
@@ -73,7 +69,7 @@ public class RpcClientNetty implements Client{
             channels.remove(key);
         }
 
-        //建立连接
+
         synchronized (this){
             Channel channel = null;
             if (channels.containsKey(key)){
@@ -101,14 +97,13 @@ public class RpcClientNetty implements Client{
 
     // 初始化 channel 方法
     private  Bootstrap initChannel() {
-        //日志handler
+
         LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.DEBUG);
-        //消息处理编码解码
 
         MessageCodec MESSAGE_CODEC = new MessageCodec(serializer);
-        //处理相应handler
+
         RpcClientMessageHandler RPC_HANDLER = new RpcClientMessageHandler();
-        //心跳处理器
+
         HeartBeatClientHandler HEATBEAT_CLIENT = new HeartBeatClientHandler();
         bootstrap.channel(NioSocketChannel.class)
                 .group(group)

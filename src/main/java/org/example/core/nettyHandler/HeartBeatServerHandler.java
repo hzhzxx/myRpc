@@ -6,19 +6,10 @@ import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * 心跳检测处理器
- *
- * @author chenlei
- */
+
 @Slf4j
 public class HeartBeatServerHandler extends ChannelDuplexHandler {
-    /**
-     * 处理特殊事件  IdleStateEvent
-     * @param ctx
-     * @param evt
-     * @throws Exception
-     */
+
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt instanceof IdleStateEvent) {

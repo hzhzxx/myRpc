@@ -20,6 +20,6 @@ public class test {
         Message m=message;
 //        byte[] bytes= Serializer.serialize(m);
 //        System.out.println(bytes);
-        HashMap
+
     }
 }

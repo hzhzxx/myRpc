@@ -48,7 +48,6 @@ public class JDKProxyInvocationHandler implements InvocationHandler {
         header.put("body-type", BodyType.BYTEARRAYS);
 
         header.put("version",1);
-        //requestId
 
         RpcRequest rpcRequest=RpcRequest.builder()
 

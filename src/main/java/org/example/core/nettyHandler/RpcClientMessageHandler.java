@@ -10,11 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.core.RpcClient.RpcClientNetty;
 import org.example.core.rpcProtocol.RpcResponse;
 
-/**
- * 处理RpcResponse相应的处理器
- *
- * @author chenlei
- */
+
 @Slf4j
 @ChannelHandler.Sharable
 public class RpcClientMessageHandler extends SimpleChannelInboundHandler<RpcResponse> {

@@ -18,22 +18,22 @@ public class ProxyFactory {
         return (T)Proxy.newProxyInstance(interfaceClass.getClassLoader(), new Class<?>[]{interfaceClass}, new JDKProxyInvocationHandler(interfaceClass,discovery,loadBalancer, client));
     }
     public static <T> T getCGLIBProxy(Class<T> interfaceClass,String remoteServiceName, Discovery discovery){
-        //1.创建Enhancer
+
         Enhancer enhancer = new Enhancer();
-        //2.传递目标对象的class
+
         enhancer.setSuperclass(interfaceClass);
-        //3.设置回调操作
+
         enhancer.setCallback(new CGLIBProxyInterceptor<>(remoteServiceName,discovery));
 
         return (T)enhancer.create();
 
     }
     public static <T> T getCGLIBProxy(Class<T> interfaceClass, Discovery discovery){
-        //1.创建Enhancer
+
         Enhancer enhancer = new Enhancer();
-        //2.传递目标对象的class
+
         enhancer.setSuperclass(interfaceClass);
-        //3.设置回调操作
+
         enhancer.setCallback(new CGLIBProxyInterceptor<>(interfaceClass,discovery));
 
         return (T)enhancer.create();

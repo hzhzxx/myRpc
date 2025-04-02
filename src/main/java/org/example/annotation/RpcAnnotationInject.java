@@ -26,7 +26,7 @@ public class RpcAnnotationInject implements BeanPostProcessor{
     }
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-
+        //查找RpcService注解的bean
         if(bean.getClass().isAnnotationPresent(RpcService.class)){
             RpcService rpcService =bean.getClass().getAnnotation(RpcService.class);
             String serviceName=null;
@@ -39,7 +39,7 @@ public class RpcAnnotationInject implements BeanPostProcessor{
             System.out.println("注册服务"+serviceName);
             register.register(serviceName,bean);
         }
-
+        //查找RpcClient注解的属性
         for (Field field:bean.getClass().getDeclaredFields()){
 
             if(field.isAnnotationPresent(RpcClient.class)){

@@ -2,11 +2,7 @@ package org.example.core.nettyHandler;
 
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 
-/**
- * 定长解码器 必须配合MessageCodecSharable使用
- *
- *
- */
+
 public class ProcotolFrameDecoder extends LengthFieldBasedFrameDecoder {
 
     public ProcotolFrameDecoder() {

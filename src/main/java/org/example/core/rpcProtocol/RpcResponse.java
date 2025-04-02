@@ -14,9 +14,9 @@ import java.util.Map;
 @AllArgsConstructor
 public class RpcResponse extends Message implements Serializable {
 
-    // 错误类型
+
     private Exception exceptionValue=null;
-    // 协议体部分
+
     private String body;
 }
 

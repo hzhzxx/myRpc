@@ -1,18 +1,18 @@
 # MySimpleRPC
 
 #### 介绍
- 一个小型的自制RPC框架。底层使用SeverSocket进行网络通信，可配置Redis或Nacos为注册中心。
+ 一个小型的自制RPC框架。底层使用SeverSocket或者选择netty进行网络通信，可配置Redis或Nacos为注册中心。
 
 #### 软件架构
 1. SpringBoot（实现以配置文件的方式配置框架的一些属性，以注解的方式注入和发现服务）
-2. 使用SeverSocket（直接使用tcp在传输层为客户端和服务端实现通信）
+2. 使用SeverSocket（直接使用tcp在传输层为客户端和服务端实现通信），以及netty
 3. 使用Redis与nacos作为注册中心供用户自定义配置使用
 4. redis使用心跳机制维持注册
 
 #### TODO
-1. 在框架中是直接用的Java序列化，还需要考虑其他方式的序列化
-2. 协议的编写：目前可以进行简单的通讯只有几个字段，还可以考虑其他的协议字段
-3. 对于socket服务使用单独的线程进行阻塞监听，并且使用线程池对新的socket进行处理，可以考虑使用非阻塞型的模式，节约系统资源。
+1. 在框架中是直接用的Java序列化，还需要考虑其他方式的序列化（添加了json）
+2. 协议的编写：目前可以进行简单的通讯只有几个字段，还可以考虑其他的协议字段（在netty的实现中增加了序列化方式以及防止粘包半包的报文长度）
+3. 对于socket服务使用单独的线程进行阻塞监听，并且使用线程池对新的socket进行处理，可以考虑使用非阻塞型的模式，节约系统资源。(已完成，使用netty)
 
 #### 快速上手
   **1.生成本地Maven依赖包：从以上的git仓库地址clone代码到本地，然后进入到项目pom目录中，执行maven安装命令：** 
@@ -39,6 +39,7 @@ huang:
     nacos-port: 8848  #nacos端口
     redis-expire-time: #redis注册的过期时间，单位为ms
     redis-hear-beat: #心跳时间，单位为ms
+    server-type: netty
 #如果使用redis为注册中心
 spring:
   redis:

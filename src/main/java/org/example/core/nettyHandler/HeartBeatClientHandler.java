@@ -10,21 +10,12 @@ import io.netty.handler.timeout.IdleStateEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.example.core.rpcProtocol.Ping;
 
-/**
- * 客户端的心跳handler
- *
- * @author chenlei
- */
+
 @Slf4j
 @ChannelHandler.Sharable
 public class HeartBeatClientHandler extends ChannelDuplexHandler {
 
-    /**
-     * idlStatus写事件
-     * @param ctx
-     * @param evt
-     * @throws Exception
-     */
+
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt instanceof IdleStateEvent) {

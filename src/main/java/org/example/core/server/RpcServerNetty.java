@@ -23,11 +23,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Rpc服务端管理器
- *
- * @author chenlei
- */
+
 public class RpcServerNetty implements Server{
 
 
@@ -47,15 +43,13 @@ public class RpcServerNetty implements Server{
 
     }
 
-    /**
-     * 开启服务
-     */
+
     public void start() {
-        //日志
+
         LoggingHandler LOGGING = new LoggingHandler(LogLevel.DEBUG);
-        //消息节码器
+
         MessageServerCodec MESSAGE_CODEC = new MessageServerCodec(serializer);
-        //RPC请求处理器
+
         RpcServerMessageHandler RPC_HANDLER = new RpcServerMessageHandler(register);
 
         try {

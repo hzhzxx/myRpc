@@ -22,11 +22,7 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Rpc请求处理器
- *
- * @author chenlei
- */
+
 @Slf4j
 @ChannelHandler.Sharable
 public class RpcServerMessageHandler extends SimpleChannelInboundHandler<RpcRequest> {
@@ -35,15 +31,11 @@ public class RpcServerMessageHandler extends SimpleChannelInboundHandler<RpcRequ
         super();
         this.register=register;
     }
-    /**
-     * 读事件
-     * @param ctx
-     * @param message
-     */
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RpcRequest message) {
         RpcResponse response=new RpcResponse();
-        //设置请求的序号
+
         response.setSequenceId(message.getSequenceId());
         RpcRequestBody body=message.getBody();
 
@@ -68,12 +60,7 @@ public class RpcServerMessageHandler extends SimpleChannelInboundHandler<RpcRequ
         }
     }
 
-    /**
-     * 读空闲
-     * @param ctx
-     * @param evt
-     * @throws Exception
-     */
+
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt instanceof IdleStateEvent) {
